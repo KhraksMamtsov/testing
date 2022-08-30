@@ -1,0 +1,172 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Testing</title>
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/black.css">
+
+    <!-- Theme used for syntax highlighting of code -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName('head')[0].appendChild(link);
+    </script>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section>
+            <h1>unit + e2e</h1>
+        </section>
+        <section>
+            <h3>Зачем?</h3>
+            <p class="fragment">Уверенность</p>
+            <p class="fragment">обновление зависимостей</p>
+            <p class="fragment">новые фичи не ломают старые</p>
+            <p class="fragment">при заливке на живой</p>
+        </section>
+        <section>
+            <h3>Вникнем в задачу</h3>
+            <p><span class="fragment">Чтобы было легко</span>
+                <span class="fragment">расширяемо</span>
+                <span class="fragment">вжих-вжих</span>
+            </p>
+            <p class="fragment">Попробуем сами</p>
+        </section>
+        <section>
+            <div class="grid">
+            <div class="fragment grid__cell grid__cell--half">
+            <pre><code data-trim class="hljs javascript">
+//tested functionality
+const mul = (a, b) => a * b;
+
+//test cases
+describe("Умножение", [{
+    it: "Должно вернуть 2",
+    test() {
+        expect(mul(1, 2)).equal(1);
+    }
+}, {
+    it: "Должно вернуть 4",
+    test() {
+        expect(mul(2, 2)).equal(4);
+    }
+}]);
+            </code></pre>
+            </div>
+            <div class="fragment grid__cell grid__cell--half">
+            <pre><code data-trim class="hljs javascript">
+//test framework
+function describe(message, cases) {
+    console.group(message);
+    cases.forEach(({it, test}) => {
+        let error,
+            isError = false;
+
+        try {
+            test();
+        } catch (err) {
+            isError = true;
+            error = err;
+        }
+
+        if (isError) {
+            console.groupCollapsed("🚫", it);
+            console.error(error);
+            console.groupEnd();
+        } else {
+            console.log("✔️", it);
+        }
+    });
+    console.groupEnd()
+}
+//assertion library
+const expect = (a) => ({
+    equal(b) {
+        if (a !== b) {
+            throw new Error(`
+                Expect ${a} should be equal ${b}.
+            `)
+        }
+    }
+});
+            </code></pre>
+            </div></div>
+        </section>
+        <section>
+            <h3>Хочется большего</h3>
+            <ul>
+                <li class="fragment">Запускать в браузерах</li>
+                <li class="fragment">Асинхронность</li>
+                <li class="fragment">String diff</li>
+                <li class="fragment">Автопрогоны</li>
+                <li class="fragment">Отчеты в удобных форматах</li>
+                <li class="fragment">Показывать медленные тесты</li>
+                <li class="fragment">Слежение за файлами</li>
+                <li class="fragment">Использовать с любой assertion библиотекой</li>
+                <li class="fragment">Поддержка IDE и редакторов</li>
+            </ul>
+        </section>
+        <section>
+            <h3>демонстрейшн</h3>
+        </section>
+    </div>
+</div>
+
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+        history     : true,
+        dependencies: [
+            {src: 'plugin/markdown/marked.js'},
+            {src: 'plugin/markdown/markdown.js'},
+            {src: 'plugin/notes/notes.js', async: true},
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                    hljs.initHighlightingOnLoad();
+                }
+            }
+        ]
+    });
+</script>
+
+<style>
+    .grid {
+
+    }
+
+    .grid__cell {
+        float: left;
+    }
+
+    .grid__cell--half {
+        width: 50%;
+    }
+
+
+    .grid__cell pre {
+        margin: 0!important;
+        width: 100%;
+    }
+    .grid__cell code {
+        max-height: none!important;
+        font-size: 16px!important;
+        line-height: normal!important;
+    }
+</style>
+</body>
+</html>
